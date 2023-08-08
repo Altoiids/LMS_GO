@@ -2,7 +2,7 @@ package controller
 
 import (
 	"net/http"
-
+"fmt"
 	"mvc/pkg/models"
 	"mvc/pkg/views"
 )
@@ -15,6 +15,7 @@ func List(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 	t := views.ListPage()
+	fmt.Println("check booksinv")
 	writer.WriteHeader(http.StatusOK)
 	t.Execute(writer, booksList)
 	

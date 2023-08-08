@@ -86,7 +86,7 @@ func VerifyToken(tokenString string) (*Claims, error) {
 
 func VerifyTokenMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/" ||  r.URL.Path == "/userlogout" ||  r.URL.Path == "/login" || r.URL.Path == "/signup" || r.URL.Path == "/adminhome" || r.URL.Path == "/adminlogout"  {
+		if r.URL.Path == "/" ||  r.URL.Path == "/userlogout" ||  r.URL.Path == "/login" || r.URL.Path == "/signup" || r.URL.Path == "/adminhome"  {
 			next.ServeHTTP(w, r)
 			return
 		}

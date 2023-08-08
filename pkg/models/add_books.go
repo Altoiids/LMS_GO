@@ -20,7 +20,7 @@ func AddBook(book_name, publisher, isbn string, edition, quantity int) string{
 	defer rows.Close()
 
 	if rows.Next() {
-		_, err = db.Exec("UPDATE books SET quantity=quantity+? WHERE book_name=?", quantity, book_name)
+		_, err = db.Exec("UPDATE books SET quantity=quantity+? WHERE book_name=? AND publisher=? AND edition =?", quantity, book_name,publisher,edition)
 		if err != nil {
 			return "Database error"
 		}

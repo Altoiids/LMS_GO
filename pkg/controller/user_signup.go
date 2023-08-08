@@ -8,14 +8,16 @@ import (
 	"mvc/pkg/views"
 	"golang.org/x/crypto/bcrypt"
 )
+
+
 func AddUserP(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	Name := r.FormValue("name")
 	Email := r.FormValue("email")
 	Password := r.FormValue("password")
-	const AdminID int = 0;
+	ConfirmPassword := r.FormValue("confirmpassword")
 
-	
+	const AdminID int = 0;
 
 	fmt.Println(Email)
 	
@@ -24,19 +26,16 @@ func AddUserP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	} 
-	hash := string(hashpassword)
+	Hash := string(hashpassword)
 	
 	var errorMessage types.ErrorMessage 
 	var str string
+
+	str, errorMessage = models.AddUser(AdminID,Name,Email,Hash,Password,ConfirmPassword)
+
 	
-
-	str, errorMessage = models.AddUser(AdminID,Name,Email,hash)
-
-	fmt.Printf("Adding the book %s whose publisher is %s, isbn is %s",Name,Email,Password)
 	if errorMessage.Message != "no error" {
-		fmt.Println(errorMessage.Message)
 		t := views.StartPage()
-		w.WriteHeader(http.StatusOK)
 		t.Execute(w, errorMessage)
 	} else {
 		http.SetCookie(w, &http.Cookie{

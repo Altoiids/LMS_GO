@@ -2,11 +2,9 @@ package api
 
 import (
 	"net/http"
-
 	"github.com/gorilla/mux"
 	"mvc/pkg/controller"
-	"mvc/pkg/models"
-	
+	"mvc/pkg/models"	
 )
 
 func Start() {
@@ -15,15 +13,9 @@ func Start() {
 	r.Use(models.VerifyTokenMiddleware)
 
 	r.HandleFunc("/", controller.Welcome).Methods("GET")
+	
 	r.HandleFunc("/signup", controller.AddUserP).Methods("POST")
 	r.HandleFunc("/login", controller.LoginUserP).Methods("POST")
-	r.HandleFunc("/adminhome", controller.LoginAdminP).Methods("POST")
-	r.HandleFunc("/adminhome", controller.WelcomeAdmin).Methods("GET")
-	r.HandleFunc("/userlogout", controller.LogoutUser).Methods("POST")
-
-	
-
-
 	r.HandleFunc("/client/profilepage", controller.ProfilePage).Methods("GET")
 	r.HandleFunc("/client/userissue", controller.UserIssueRequests).Methods("GET")
 	r.HandleFunc("/client/userreturn", controller.UserReturnRequest).Methods("GET")
@@ -32,7 +24,10 @@ func Start() {
 	r.HandleFunc("/client/withdrawir", controller.WithdrawIR).Methods("POST")
     r.HandleFunc("/client/withdrawrr", controller.WithdrawRR).Methods("POST")
 	r.HandleFunc("/client/requestreturn", controller.RequestReturn).Methods("POST")
-    
+	r.HandleFunc("/userlogout", controller.LogoutUser).Methods("POST")
+
+	r.HandleFunc("/adminhome", controller.LoginAdminP).Methods("POST")
+	r.HandleFunc("/adminhome", controller.WelcomeAdmin).Methods("GET") 
 	r.HandleFunc("/admin/addbook",controller.AddPage).Methods("GET")
 	r.HandleFunc("/admin/addbook",controller.Add).Methods("POST")
 	r.HandleFunc("/admin/qtyinc",controller.IncQty).Methods("POST")

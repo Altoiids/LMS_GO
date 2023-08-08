@@ -5,23 +5,27 @@ import (
 	"net/http"
 	"mvc/pkg/models"
 	"mvc/pkg/views"
+	"mvc/pkg/types"
 )
 
 func LoginUserP(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	Email := r.FormValue("emaill")
 	Password := r.FormValue("passwordl")
+
 	
 	fmt.Println(Email,Password)
 
-
-	str, error := models.UserLogin(Email,Password)
+	var errorMessage types.ErrorMessage 
+	var str string
+	var AdminId int
+    AdminId = 0
+	str, errorMessage = models.UserLogin(Email,Password,AdminId)
 
 	
-	if error != nil {
+	if errorMessage.Message != "no error" {
 		t := views.StartPage()
-		w.WriteHeader(http.StatusOK)
-		t.Execute(w, error)
+		t.Execute(w, errorMessage)
 	} else {
 		http.SetCookie(w, &http.Cookie{
 			Name:     "jwt",

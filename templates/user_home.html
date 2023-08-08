@@ -420,7 +420,81 @@ main.sign-up-mode .carousel {
       <div class="box">
         <div class="inner-box">
           <div class="forms-wrap">
-            <form method="POST" action="/login" autocomplete="off" class="sign-in-form">
+
+            <form method="POST" action="/signup" autocomplete="off" class="sign-in-form">
+              
+                
+              <h4>Luminex Library</h4>
+            
+
+            <div class="heading">
+              <h2>Get Started</h2>
+              <h6>Already have an account?</h6>
+              <a href="#" class="toggle">Sign in</a>
+            </div>
+
+            <div class="actual-form">
+              <div class="input-wrap">
+                <input
+                  type="name"
+                  name="name"
+                  minlength="4"
+                  class="input-field"
+                  autocomplete="off"
+                  required
+                />
+                <label>UserName</label>
+              </div>
+
+              <div class="input-wrap">
+                <input
+                  type="email"
+                  name="email"
+                  class="input-field"
+                  autocomplete="off"
+                  required
+                />
+                <label>Email</label>
+              </div>
+
+              <div class="input-wrap">
+                <input
+                  type="password"
+                  name="password"
+                  minlength="4"
+                  class="input-field"
+                  autocomplete="off"
+                  required
+                />
+                <label>Password</label>
+              </div>
+              <div class="input-wrap">
+                <input
+                  type="password"
+                  name="confirmpassword"
+                  minlength="4"
+                  class="input-field"
+                  autocomplete="off"
+                  required
+                />
+                <label>Confirm Password</label>
+              </div>
+
+              {{ if .Message }}
+              
+              <input type="hidden" name="error" id = "error" value="{{ .Message }}">
+      
+            
+              {{ end }}
+
+  
+              <button onclick="showErrorMessage()" class = "sign-btn">User SignUp</button>
+              <a href="/adminhome" class="toggle">Login as admin</a>
+              
+            </div>
+          </form>
+          
+            <form method="POST" action="/login" autocomplete="off" class="sign-up-form">
               
                 <h1>Luminex Library</h1>
               
@@ -456,76 +530,23 @@ main.sign-up-mode .carousel {
                   <label>Password</label>
                 </div>
 
-                <input type="submit" value="User Sign In" class="sign-btn" />
+                {{ if .Message }}
+              
+              <input type="hidden" name="error" id = "error" value="{{ .Message }}">
+      
+            
+              {{ end }}
 
-                <a href="#" class="toggle">Login as admin</a>
+  
+              <button onclick="showErrorMessage()" class = "sign-btn">User Login</button>
+
+            
+
+                <a href="/adminhome" class="toggle">Login as admin</a>
               </div>
             </form>
 
-            <form method="POST" action="/signup" autocomplete="off" class="sign-up-form">
-              
-                
-                <h4>Luminex Library</h4>
-              
-
-              <div class="heading">
-                <h2>Get Started</h2>
-                <h6>Already have an account?</h6>
-                <a href="#" class="toggle">Sign in</a>
-              </div>
-
-              <div class="actual-form">
-                <div class="input-wrap">
-                  <input
-                    type="name"
-                    name="name"
-                    minlength="4"
-                    class="input-field"
-                    autocomplete="off"
-                    required
-                  />
-                  <label>Name</label>
-                </div>
-
-                <div class="input-wrap">
-                  <input
-                    type="email"
-                    name="email"
-                    class="input-field"
-                    autocomplete="off"
-                    required
-                  />
-                  <label>Email</label>
-                </div>
-
-                <div class="input-wrap">
-                  <input
-                    type="password"
-                    name="password"
-                    minlength="4"
-                    class="input-field"
-                    autocomplete="off"
-                    required
-                  />
-                  <label>Password</label>
-                </div>
-                <div class="input-wrap">
-                  <input
-                    type="password"
-                    name="passwordc"
-                    minlength="4"
-                    class="input-field"
-                    autocomplete="off"
-                    required
-                  />
-                  <label>Confirm Password</label>
-                </div>
-
-                <input type="submit" value="Sign Up" class="sign-btn" />
-
-                
-              </div>
-            </form>
+           
           </div>
 
           <div class="carousel">
@@ -596,6 +617,20 @@ function moveSlider() {
 bullets.forEach((bullet) => {
   bullet.addEventListener("click", moveSlider);
 });
+
+const message = document.getElementById('error').value;
+
+function showErrorMessage() {
+  const errorMessage = document.getElementById("error").value;
+  if (errorMessage) {
+      alert(errorMessage); // You can replace this with your custom popup implementation
+      document.getElementById("error").value = '';
+  }
+}
+
+// Call the showErrorMessage function on page load
+window.onload = showErrorMessage;
+
     </script>
   </body>
 </html>

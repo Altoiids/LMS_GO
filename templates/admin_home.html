@@ -427,7 +427,7 @@ main.sign-up-mode .carousel {
               
 
               <div class="heading">
-                <h3>Welcome Back</h3>
+                <h3>Welcome Back Admin</h3>
                 
               </div>
 
@@ -456,9 +456,17 @@ main.sign-up-mode .carousel {
                   <label>Password</label>
                 </div>
 
-                <input type="submit" value="Admin Sign In" class="sign-btn" />
+                {{ if .Message }}
+              
+                <input type="hidden" name="error" id = "error" value="{{ .Message }}">
+        
+              
+                {{ end }}
+  
+    
+                <button onclick="showErrorMessage()" class = "sign-btn">Admin Sign In</button>
 
-                <a href="#" class="toggle">Login as User</a>
+                <a href="/" class="toggle">Login as User</a>
               </div>
             </form>
 
@@ -529,6 +537,20 @@ function moveSlider() {
 bullets.forEach((bullet) => {
   bullet.addEventListener("click", moveSlider);
 });
+
+const message = document.getElementById('error').value;
+
+function showErrorMessage() {
+  const errorMessage = document.getElementById("error").value;
+  if (errorMessage) {
+      alert(errorMessage); // You can replace this with your custom popup implementation
+      document.getElementById("error").value = '';
+  }
+}
+
+// Call the showErrorMessage function on page load
+window.onload = showErrorMessage;
+
 
     </script>
   </body>

@@ -1,0 +1,1 @@
+ALTER TABLE request ADD temp_col int not null default 0;

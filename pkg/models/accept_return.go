@@ -19,7 +19,7 @@ func FetchReturnBooks() ([]types.Book, error) {
 	var books []types.Book
 	for rows.Next() {
 		var book types.Book
-		err := rows.Scan(&book.RequestID, &book.UserID, &book.UserName,&book.BookID, &book.BookName)
+		err := rows.Scan(&book.RequestID, &book.BookID, &book.BookName,&book.UserID, &book.UserName)
 		if err != nil {
 			return nil, err
 		}
@@ -38,21 +38,31 @@ func AcceptReturn(request_id , book_id int) (string){
 	}
 	defer db.Close()
 
-	rows, err := db.Query(`DELETE FROM request WHERE request_id = ?` , request_id)
+	rows, err := db.Exec(`DELETE FROM request WHERE request_id = ?` , request_id)
 	if err != nil {
 		fmt.Println(err)
 		return "There was error"
 		
 	}
-	defer rows.Close()
 
-	if rows.Next() {
-		_, err = db.Exec("UPDATE books SET Quantity = Quantity +1  WHERE book_id = ?;",book_id)
+
+	rowsAffected, err := rows.RowsAffected()
+
+	
+	if rowsAffected > 0 {
+		fmt.Println("somya")
+		fmt.Println(book_id)
+		_,err := db.Exec(`UPDATE books SET quantity=quantity + 1 WHERE book_id=?`, book_id)
 		if err != nil {
-			return "Database error"
+			fmt.Println("chawla")
+		fmt.Println(err)
+		
 		}
 	} 
+
 	return ""
+
+
 }
 
 

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-
 	"mvc/pkg/views"
 )
 

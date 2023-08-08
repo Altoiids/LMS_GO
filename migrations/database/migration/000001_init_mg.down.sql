@@ -1,0 +1,1 @@
+ALTER TABLE request DROP temp_col;
