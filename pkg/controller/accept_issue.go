@@ -14,38 +14,43 @@ func ListIssueRequest(writer http.ResponseWriter, request *http.Request) {
 		http.Error(writer, "Database error", http.StatusInternalServerError)
 		return
 	}
-	t := views.IssueReqPage()
+
+	t := views.IssueRequestPage()
 	writer.WriteHeader(http.StatusOK)
 	t.Execute(writer, booksList)
 }
 
 func AcceptIssue(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	RequestId := r.FormValue("requestid")
-	requestId, err := strconv.Atoi(RequestId)
-	BookId := r.FormValue("bookid")
-	bookId, err := strconv.Atoi(BookId)
+	requestId, err := strconv.Atoi(r.FormValue("requestId"))
 	if err != nil {
 		return
 	}
-	fmt.Println(requestId,bookId)
-	error := models.AcceptIssue(requestId,bookId)
-	if error != "" {
-		return 
+	bookId, err := strconv.Atoi(r.FormValue("bookId"))
+	if err != nil {
+		return
 	}
-	http.Redirect(w, r, "/admin/issuerequests", http.StatusSeeOther)
+
+	error := models.AcceptIssue(requestId,bookId)
+	if error != nil {
+	   fmt.Println(error)
+	}
+
+	http.Redirect(w, r, "/admin/issueRequests", http.StatusSeeOther)
 }
 
 func RejectIssue(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	RequestId := r.FormValue("requestid")
+	RequestId := r.FormValue("requestId")
 	requestId, err := strconv.Atoi(RequestId)
 	if err != nil {
 		return
 	}
+	
 	error := models.RejectIssue(requestId)
 	if error != "" {
 		return 
 	}
-	http.Redirect(w, r, "/admin/issuerequests", http.StatusSeeOther)
+
+	http.Redirect(w, r, "/admin/issueRequests", http.StatusSeeOther)
 }

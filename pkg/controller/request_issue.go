@@ -28,7 +28,7 @@ func RequestIssue(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	username := claims.Name
+	username := claims.Username
 	
 
 	r.ParseForm()

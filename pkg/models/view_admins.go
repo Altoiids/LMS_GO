@@ -2,16 +2,16 @@ package models
 
 import (
 	_ "github.com/go-sql-driver/mysql"
+	"database/sql"
 	"mvc/pkg/types"
 )
 
-func ViewAdmins() ([]types.UserReg, error) {
-	db, err := Connection()
+func ViewAdmins(db *sql.DB) ([]types.UserReg, error) {
+	
 	rows, err := db.Query("SELECT name, email FROM user where Admin_id = 1")
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
 	var admins []types.UserReg
 	for rows.Next() {

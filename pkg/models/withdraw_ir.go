@@ -7,15 +7,15 @@ import (
 	
 )
 
-func WithdrawIR(username string,bookid int) (error) {
+func WithdrawIR(username string,bookId int) (error) {
 	var userID int
 	db, err := Connection()
 	error := db.QueryRow("SELECT user_id FROM user WHERE name=?", username).Scan(&userID)
 	if error != nil {
 		return error
 	}
-   fmt.Println(bookid,userID)
-	rows, err := db.Query(`DELETE FROM request WHERE book_id = ? and user_id=? and status != "owned";`,bookid,userID)
+   fmt.Println(bookId,userID)
+	rows, err := db.Query(`DELETE FROM request WHERE book_id = ? and user_id=? and status != "owned";`,bookId,userID)
 	if err != nil {
 		return err
 		

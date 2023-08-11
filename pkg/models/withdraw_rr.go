@@ -7,7 +7,7 @@ import (
 	
 )
 
-func WithdrawRR(username string,bookid int) (error) {
+func WithdrawRR(username string,bookId int) (error) {
 	var userID int
 	db, err := Connection()
 	error := db.QueryRow("SELECT user_id FROM user WHERE name=?", username).Scan(&userID)
@@ -15,9 +15,9 @@ func WithdrawRR(username string,bookid int) (error) {
 		return error
 	}
 
-   fmt.Println(bookid,userID)
+   fmt.Println(bookId,userID)
 
-	rows, err := db.Query(`UPDATE request set status = "owned" WHERE book_id = ? and user_id=? and status = "return requested";`,bookid,userID)
+	rows, err := db.Query(`UPDATE request set status = "owned" WHERE book_id = ? and user_id=? and status = "return requested";`,bookId,userID)
 	if err != nil {
 		fmt.Println("somya recent")
 		fmt.Println(err)

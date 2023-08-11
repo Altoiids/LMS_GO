@@ -4,38 +4,52 @@ import (
 	"net/http"
 	"mvc/pkg/models"
 	"strconv"
+	"log"
 )
 
-func IncQty(w http.ResponseWriter, r *http.Request) {
+func IncreaseQuantity(w http.ResponseWriter, r *http.Request) {
+	db, err := models.Connection()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
 
 	r.ParseForm()
-	bookid := r.FormValue("bookid")
-	bookId, err := strconv.Atoi(bookid)
-	
-	quantity := r.FormValue("quantity")
-	Quantity, err := strconv.Atoi(quantity)
-	
+	bookId, err := strconv.Atoi(r.FormValue("bookId"))
+	if err != nil {
+		return
+	}
+	quantity, err := strconv.Atoi(r.FormValue("quantity"))
 	if err != nil {
 		return
 	}
 
-	models.IncQty(bookId,Quantity)
-	http.Redirect(w, r, "/admin/booksinv", http.StatusSeeOther)
+	models.IncreaseQuantity(db,bookId,quantity)
+	http.Redirect(w, r, "/admin/booksInventory", http.StatusSeeOther)
 }
 
-func DecQty(w http.ResponseWriter, r *http.Request) {
-
+func DecreaseQuantity(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	bookid := r.FormValue("bookid")
-	bookId, err := strconv.Atoi(bookid)
-	
-	quantity := r.FormValue("quantity")
-	Quantity, err := strconv.Atoi(quantity)
-	
+	bookId, err := strconv.Atoi(r.FormValue("bookId"))
+	if err != nil {
+		return
+	}
+	quantity, err := strconv.Atoi(r.FormValue("quantity"))
 	if err != nil {
 		return
 	}
 
-	models.DecQty(bookId,Quantity)
-	http.Redirect(w, r, "/admin/booksinv", http.StatusSeeOther)
+	models.DecreaseQuantity(bookId,quantity)
+	http.Redirect(w, r, "/admin/booksInventory", http.StatusSeeOther)
+}
+
+func RemoveBook(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	bookId, err := strconv.Atoi(r.FormValue("bookId"))
+	if err != nil {
+		return
+	}
+
+	models.RemoveBook(bookId)
+	http.Redirect(w, r, "/admin/booksInventory", http.StatusSeeOther)
 }

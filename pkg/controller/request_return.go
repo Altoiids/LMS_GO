@@ -26,7 +26,7 @@ func RequestReturn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	username := claims.Name
+	username := claims.Username
 
 	r.ParseForm()
 	BookId := r.FormValue("book_id")

@@ -25,7 +25,7 @@ func UserIssueRequests(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	username := claims.Name
+	username := claims.Username
 	
 	
 	booksList,err := models.UserIssueRequests(username)

@@ -4,19 +4,15 @@ import (
 	"net/http"
 	"mvc/pkg/models"
 	"mvc/pkg/views"
-	"mvc/pkg/types"
-)
+	)
 
-func LoginAdminP(w http.ResponseWriter, r *http.Request) {
+func LoginAdmin(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	Email := r.FormValue("emaill")
-	Password := r.FormValue("passwordl")
-	var errorMessage types.ErrorMessage 
-
-	var str string
-	var AdminId int
-    AdminId = 1
-	str, errorMessage = models.UserLogin(Email,Password,AdminId)
+	Email := r.FormValue("loginEmail")
+	Password := r.FormValue("loginPassword")
+    AdminId := 1
+	
+	string, errorMessage := models.UserLogin(Email,Password,AdminId)
 	
 
 		if errorMessage.Message != "no error" {
@@ -25,10 +21,11 @@ func LoginAdminP(w http.ResponseWriter, r *http.Request) {
 		} else {
 			http.SetCookie(w, &http.Cookie{
 				Name:     "jwt",
-				Value:    str,
+				Value:    string,
 				Path:     "/",
 				HttpOnly: true,
 			})
-			http.Redirect(w, r, "/admin/booksinv", http.StatusSeeOther)
+
+			http.Redirect(w, r, "/admin/booksInventory", http.StatusSeeOther)
 		}
 	}

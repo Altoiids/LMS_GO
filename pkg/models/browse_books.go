@@ -7,7 +7,7 @@ import (
 
 func BrowseBooks() ([]types.Book, error) {
 	db, err := Connection()
-	rows, err := db.Query("SELECT book_id, book_name, publisher, edition FROM books where Quantity > 0")
+	rows, err := db.Query("SELECT book_id, book_name, publisher, edition, Quantity FROM books")
 	if err != nil {
 		return nil, err
 	}
@@ -16,7 +16,7 @@ func BrowseBooks() ([]types.Book, error) {
 	var books []types.Book
 	for rows.Next() {
 		var book types.Book
-		err := rows.Scan(&book.BookID, &book.BookName, &book.Publisher, &book.Edition)
+		err := rows.Scan(&book.BookID, &book.BookName, &book.Publisher, &book.Edition, &book.Quantity)
 		if err != nil {
 			return nil, err
 		}

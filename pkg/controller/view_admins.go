@@ -8,8 +8,13 @@ import (
 )
 
 func ViewAdmins(writer http.ResponseWriter, request *http.Request) {
-	
-	booksList,err := models.ViewAdmins()
+	db, err := models.Connection()
+	rows, err := db.Query("SELECT name, email FROM user where Admin_id = 1")
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	adminsList,err := models.ViewAdmins(db)
 	if err != nil {
 		http.Error(writer, "Database error", http.StatusInternalServerError)
 		fmt.Println(err)
@@ -17,7 +22,7 @@ func ViewAdmins(writer http.ResponseWriter, request *http.Request) {
 	}
 	t := views.ViewAdmins()
 	writer.WriteHeader(http.StatusOK)
-	t.Execute(writer, booksList)
+	t.Execute(writer, adminsList)
 	
 }
 

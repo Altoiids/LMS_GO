@@ -28,13 +28,13 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table style="text-align:center; vertical-align:middle;" class="table table-bordered">
                             <tr>
-                                <th>Book_ID</th>
-                                <th>Book_name</th>
+                                <th>Book ID</th>
+                                <th>Book Name</th>
                                 <th>Publisher</th>
                                 <th>Edition</th>
-
+                                <th>Available Quantity</th>
                                 <th>Action</th>
 
                             </tr>
@@ -53,9 +53,12 @@
                                         {{ .Edition}}
                                     </td>
                                     <td>
+                                        {{ .Quantity}}
+                                    </td>
+                                    <td>
                                         <div>
 
-                                            <form action="/client/userbrowse" method="POST">
+                                            <form action="/client/requestIssue" method="POST">
                                                 <input type="hidden" name="book_id" id ="book_id" value = "{{ .BookID}}">
                     
 

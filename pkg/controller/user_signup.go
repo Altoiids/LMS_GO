@@ -15,23 +15,23 @@ func AddUserP(w http.ResponseWriter, r *http.Request) {
 	Name := r.FormValue("name")
 	Email := r.FormValue("email")
 	Password := r.FormValue("password")
-	ConfirmPassword := r.FormValue("confirmpassword")
+	confirmPassword := r.FormValue("confirmPassword")
 
 	const AdminID int = 0;
 
 	fmt.Println(Email)
 	
-	pswd := []byte(Password)
-	hashpassword, err := bcrypt.GenerateFromPassword(pswd, bcrypt.DefaultCost)
+	password := []byte(Password)
+	hashpassword, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
 	if err != nil {
 		panic(err)
 	} 
-	Hash := string(hashpassword)
+	hash := string(hashpassword)
 	
 	var errorMessage types.ErrorMessage 
 	var str string
 
-	str, errorMessage = models.AddUser(AdminID,Name,Email,Hash,Password,ConfirmPassword)
+	str, errorMessage = models.AddUser(AdminID,Name,Email,hash,Password,confirmPassword)
 
 	
 	if errorMessage.Message != "no error" {

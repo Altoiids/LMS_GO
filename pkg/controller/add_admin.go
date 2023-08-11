@@ -6,7 +6,6 @@ import (
 	"mvc/pkg/models"
 	"golang.org/x/crypto/bcrypt"
 	"mvc/pkg/views"
-	"mvc/pkg/types"
 )
 
 func AddAdminPage(writer http.ResponseWriter, request *http.Request) {
@@ -14,29 +13,29 @@ func AddAdminPage(writer http.ResponseWriter, request *http.Request) {
 	t.Execute(writer, nil)
 }
 
-func AddAdminP(w http.ResponseWriter, r *http.Request) {
+func AddAdmin(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	Name := r.FormValue("name")
-	Email := r.FormValue("email")
-	Password := r.FormValue("password")
-	ConfirmPassword := r.FormValue("confirmpassword")
-	const AdminID int = 1;
-    pswd := []byte(Password)
-	hashpassword, err := bcrypt.GenerateFromPassword(pswd, bcrypt.DefaultCost)
+	name := r.FormValue("name")
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+	confirmPassword := r.FormValue("confirmPassword")
+
+	const adminId int = 1;
+
+    passWord := []byte(password)
+	hashpassword, err := bcrypt.GenerateFromPassword(passWord, bcrypt.DefaultCost)
 	if err != nil {
 		panic(err)
 	} 
-	Hash := string(hashpassword)
-	var errorMessage types.ErrorMessage 
-	var returnstr string
-	returnstr, errorMessage = models.AddUser(AdminID,Name,Email,Hash,Password,ConfirmPassword)
-	fmt.Println(returnstr)
+	hash := string(hashpassword)
+
+	returnString, errorMessage := models.AddUser(adminId,name,email,hash,password,confirmPassword)
 	if errorMessage.Message != "no error" {
+		fmt.Println(returnString)
 		t := views.AddAdmin()
 		t.Execute(w, errorMessage)
 	} else {
-		
-		http.Redirect(w, r, "/admin/viewadmins", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/viewAdmins", http.StatusSeeOther)
 	}
 }
 	

@@ -25,15 +25,15 @@ func WithdrawRR(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	username := claims.Name
+	username := claims.Username
 	r.ParseForm()
 	BookId := r.FormValue("bookId")
-	bookid, err := strconv.Atoi(BookId)
+	bookId, err := strconv.Atoi(BookId)
 
 
-	fmt.Println(username,bookid)
+	fmt.Println(username,bookId)
 	
-	error := models.WithdrawRR(username,bookid)
+	error := models.WithdrawRR(username,bookId)
 	if error != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		fmt.Println(error)

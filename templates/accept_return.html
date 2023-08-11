@@ -28,14 +28,14 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table style="text-align:center; vertical-align:middle;" class="table table-bordered">
                             <tr>
                                 <th>Request_ID</th>
                                 <th>Book_Id</th>
                                 <th>Book Name</th>
                                 <th>User_Id</th>
                                 <th>User name</th>
-                                <th>Action</th>
+                                <th width="18%">Action</th>
 
                             </tr>
                             {{range .}}
@@ -57,8 +57,10 @@
                                     </td>
                                     <td>
                                         <div>
-
-                                            <form action="/admin/acceptreturnreq" method="POST">
+                                          <div class = "container">
+                                            <div class = "row">
+                                                <div class="col-6">
+                                            <form action="/admin/acceptReturnRequest" method="POST">
                                                 <input type="hidden" name="requestId" value="{{ .RequestID}}">
                                                 <input type="hidden" name="bookId" value="{{ .BookID}}">
 
@@ -66,15 +68,18 @@
                                             </form>
                                         </div>
 
-                                        <div>
+                                        <div class= "col-6">
 
-                                            <form action="/admin/rejectreturnreq" method="POST">
+                                            <form action="/admin/rejectReturnRequest" method="POST">
                                                 <input type="hidden" name="requestId" value="{{ .RequestID}}">
                                                 <input type="hidden" name="bookId" value="{{ .BookID}}">  
 
                                                 <button type="submit" class="btn btn-primary btn-sm">Reject</button>
                                             </form>
+
                                         </div>
+                                    </div>
+                                    </div>
                                     </td>
                                 </tr>
                               {{ end}}

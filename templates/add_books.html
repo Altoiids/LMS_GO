@@ -23,7 +23,7 @@
 			<div class="card">
 				<div class="card-header">Add New Book</div>
 				<div class="card-body">
-					<form method="POST" action="/admin/addbook">
+					<form method="POST" action="/admin/addBook">
 						<div class="row">
 							<div class="col-md-6">
 								<div class="mb-3">
@@ -33,6 +33,7 @@
 										name="title"
 										id="book_name"
 										class="form-control"
+										required
 									/>
 								</div>
 							</div>
@@ -44,6 +45,7 @@
 										name="author"
 										id="publisher"
 										class="form-control"
+										required
 									/>
 								</div>
 							</div>
@@ -70,6 +72,7 @@
 										id="edition"
 										min="1"
 										class="form-control"
+										required
 									/>
 								</div>
 							</div>
@@ -83,6 +86,7 @@
 										name="author"
 										id="quantity"
 										class="form-control"
+										required
 									/>
 								</div>
 							</div>
@@ -137,11 +141,11 @@
 					console.log(response)
                   if (response.ok) {
                     console.log('API request successful!');
-                	window.location.href = '/admin/booksinv';
+                	window.location.href = '/admin/booksInventory';
 					console.log(flag)
                   } else {
                     console.log('API request failed!');
-					window.location.href = '/admin/booksinv';
+					window.location.href = '/admin/booksInventory';
 					console.log(flag)
                   }
                 })

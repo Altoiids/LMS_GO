@@ -1,16 +1,22 @@
+
 package types
+
+import (
+	"time"
+)
 
 type Book struct {
 	UserName string `json:"username"`
 	UserID int `json:"userid"`
-	BookID    int    `json:"bookid"`
-	BookName  string `json:"book_name"`
-	RequestID int `json:"requestid"` 
+	BookID    int    `json:"bookId"`
+	BookName  string `json:"bookname"`
+	RequestID int `json:"requestId"` 
 	Publisher string `json:"publisher"`
 	ISBN      string `json:"isbn"`
 	Edition   int    `json:"edition"`
 	Quantity  int    `json:"quantity"`
-
+	IssuedQuantity  int  `json:"issuedquantity"`
+	Timestamp  time.Time
 }
 
 type HashedPassword struct {

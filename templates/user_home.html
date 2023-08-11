@@ -421,7 +421,7 @@ main.sign-up-mode .carousel {
         <div class="inner-box">
           <div class="forms-wrap">
 
-            <form method="POST" action="/signup" autocomplete="off" class="sign-in-form">
+            <form method="POST" action="/signUp" autocomplete="off" class="sign-in-form">
               
                 
               <h4>Luminex Library</h4>
@@ -471,7 +471,7 @@ main.sign-up-mode .carousel {
               <div class="input-wrap">
                 <input
                   type="password"
-                  name="confirmpassword"
+                  name="confirmPassword"
                   minlength="4"
                   class="input-field"
                   autocomplete="off"
@@ -509,7 +509,7 @@ main.sign-up-mode .carousel {
                 <div class="input-wrap">
                   <input
                     type="email"
-                    name = "emaill"
+                    name = "loginEmail"
                     minlength="4"
                     class="input-field"
                     autocomplete="off"
@@ -521,7 +521,7 @@ main.sign-up-mode .carousel {
                 <div class="input-wrap">
                   <input
                     type="password"
-                    name = "passwordl"
+                    name = "loginPassword"
                     minlength="4"
                     class="input-field"
                     autocomplete="off"
@@ -551,9 +551,6 @@ main.sign-up-mode .carousel {
 
           <div class="carousel">
             <div class="images-wrapper">
-              <!-- <img src="/assets/cognitive.png" class="image img-1 show" alt="" />
-              <img src="/assets/stress.jpeg" class="image img-2" alt="" />
-              <img src="/assets/sleep.jpeg" class="image img-3" alt="" /> -->
             </div>
 
             <div class="text-slider">
@@ -623,12 +620,12 @@ const message = document.getElementById('error').value;
 function showErrorMessage() {
   const errorMessage = document.getElementById("error").value;
   if (errorMessage) {
-      alert(errorMessage); // You can replace this with your custom popup implementation
+      alert(errorMessage); 
       document.getElementById("error").value = '';
   }
 }
 
-// Call the showErrorMessage function on page load
+
 window.onload = showErrorMessage;
 
     </script>

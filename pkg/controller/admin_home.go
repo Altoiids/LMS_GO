@@ -5,7 +5,7 @@ import (
 	"mvc/pkg/views"
 )
 
-func WelcomeAdmin(writer http.ResponseWriter, request *http.Request) {
+func AdminHome(writer http.ResponseWriter, request *http.Request) {
 	t := views.StartAdminPage()
 	t.Execute(writer, nil)
 }

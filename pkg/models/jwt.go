@@ -10,16 +10,17 @@ import (
 	"log"
 	"os"
 	"mvc/pkg/types"
+	"errors"
 )
 
 
 type Claims struct {
-	Name string `json:"name"`
+	Username string `json:"username"`
 	jwt.StandardClaims
 }
 
 
-func GenerateToken(name string) (string, error) {
+func GenerateToken(username string) (string, error) {
 	file, err := os.ReadFile("config.yaml")
 	if err != nil {
 		log.Fatal(err)
@@ -36,7 +37,7 @@ func GenerateToken(name string) (string, error) {
 	jwtKey := []byte(jwtsecretkey)
 	
 	claims := &Claims{
-		Name: name,
+		Username: username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 1).Unix(), 
 			IssuedAt:  time.Now().Unix(),
@@ -83,21 +84,23 @@ func VerifyToken(tokenString string) (*Claims, error) {
 	return nil, fmt.Errorf("Invalid token")
 }
 
-
 func VerifyTokenMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/" ||  r.URL.Path == "/userlogout" ||  r.URL.Path == "/login" || r.URL.Path == "/signup" || r.URL.Path == "/adminhome"  {
+		pathComponents := strings.Split(r.URL.Path, "/")
+		firstPartOfURL := pathComponents[1]
+		if r.URL.Path == "/" || r.URL.Path == "/userlogout"|| r.URL.Path == "/adminlogout" || firstPartOfURL == "static" || r.URL.Path == "/adminhome" {
 			next.ServeHTTP(w, r)
 			return
 		}
-
-
 		cookie, err := r.Cookie("jwt")
 		if err != nil {
-			http.Redirect(w, r, "/", http.StatusSeeOther) 
-			fmt.Println(err)
-			return
-			
+			if r.URL.Path == "/" || r.URL.Path == "/userlogout"|| r.URL.Path == "/adminlogout" || r.URL.Path == "/adminhome" || r.URL.Path == "/signup" || r.URL.Path == "/login"|| firstPartOfURL == "static"  {
+				next.ServeHTTP(w, r)
+				return
+			} else {
+				http.Redirect(w, r, "/", http.StatusSeeOther)
+				return
+			}
 		}
 
 		tokenString := strings.TrimSpace(cookie.Value)
@@ -107,8 +110,58 @@ func VerifyTokenMiddleware(next http.Handler) http.Handler {
 			fmt.Println(err)
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		} else {
-			next.ServeHTTP(w, r)
-			
-		}
+			username := claims.Username
+			if firstPartOfURL == "admin" {
+				err := ValidateUserStatus(username, "admin")
+				if err == nil {
+					if r.URL.Path == "/signup" || r.URL.Path == "/login" || r.URL.Path == "/" || r.URL.Path == "/adminhome" || r.URL.Path == "/adminlogout" {
+						http.Redirect(w, r, "/client/profilepage", http.StatusSeeOther)
+						return
+					}
+					next.ServeHTTP(w, r)
+				} else {
+					http.Redirect(w, r, "/client/profile", http.StatusSeeOther)
+				}
+			} else {
+				err := ValidateUserStatus(username, "client")
+				if err == nil {
+					if r.URL.Path == "/signup" || r.URL.Path == "/login" || r.URL.Path == "/" || r.URL.Path == "/adminhome" || r.URL.Path == "/adminlogout" {
+						http.Redirect(w, r, "/client/profilepage", http.StatusSeeOther)
+						return
+					}
+				
+						next.ServeHTTP(w, r)
+					} else {
+						http.Redirect(w, r, "/admin/booksInventory", http.StatusSeeOther)
+					}
+				}
+			}
 	})
+}
+
+
+
+func ValidateUserStatus(username, Usertype string) error {
+	db, err := Connection()
+	if err != nil {
+		return err
+	}
+	var admin_id int
+	
+	if Usertype == "admin"{
+	admin_id = 1
+}
+if Usertype == "client"{
+	admin_id = 0
+}
+	var CorrectUser bool
+	err = db.QueryRow(`SELECT EXISTS (SELECT 1 FROM user WHERE name=? and admin_id=?)`, username, admin_id).Scan(&CorrectUser)
+	if err != nil {
+		return err
+	} else if CorrectUser == false {
+		newError := errors.New("Wrong User Type")
+		return newError
+	} else {
+		return nil
+	}
 }

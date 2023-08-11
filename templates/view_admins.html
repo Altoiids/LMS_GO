@@ -28,13 +28,14 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table style="text-align:center; vertical-align:middle;" class="table  table-bordered">
                             <tr>
-                                <th>Name</th>
+                                <th>Username</th>
                                 <th>Email</th>
-
+                                <th>Action</th>
 
                             </tr>
+        
                           {{ range .}}
                                 <tr>
                                     <td>
@@ -43,7 +44,21 @@
                                     <td>
                                         {{ .Email}}
                                     </td>
+                                    
+                                    <td>
+                                                
+                                
 
+                                  
+                                            <form action="/admin/removeAdmin" method="POST">
+                                            
+                                                <input type="hidden" name="email" value="{{ .Email}}">
+                                        
+                                                <button type="submit" class="btn btn-primary btn-sm">Remove Admin</button>
+                                            </form>
+                    
+                                
+                                    </td>
 
                                 </tr>
                                

@@ -27,7 +27,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table style="text-align:center; vertical-align:middle;" class="table table-bordered">
                             <tr>
                                 <th>Book_ID</th>
                                 <th>Book_name</th>
@@ -49,7 +49,7 @@
                                     <td>
                                         <div>
 
-                                            <form action="/client/withdrawir" method="POST">
+                                            <form action="/client/withdrawIssueRequest" method="POST">
                                                 <input type="hidden" name="bookId" value="{{ .BookID}}">
                   
                                                 <button type="submit" class="btn btn-primary btn-sm">Withdraw

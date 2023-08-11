@@ -10,8 +10,8 @@ import (
 
 func LoginUserP(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	Email := r.FormValue("emaill")
-	Password := r.FormValue("passwordl")
+	Email := r.FormValue("loginEmail")
+	Password := r.FormValue("loginPassword")
 
 	
 	fmt.Println(Email,Password)
