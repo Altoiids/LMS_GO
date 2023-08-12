@@ -1,38 +1,30 @@
 package controller
 
 import (
-    "fmt"
-	"net/http"
 	"mvc/pkg/models"
 	"mvc/pkg/views"
-	"mvc/pkg/types"
+	"net/http"
 )
 
 func LoginUserP(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	Email := r.FormValue("loginEmail")
-	Password := r.FormValue("loginPassword")
+	email := r.FormValue("loginEmail")
+	password := r.FormValue("loginPassword")
+	adminId := 0
 
-	
-	fmt.Println(Email,Password)
-
-	var errorMessage types.ErrorMessage 
-	var str string
-	var AdminId int
-    AdminId = 0
-	str, errorMessage = models.UserLogin(Email,Password,AdminId)
-
-	
+	string, errorMessage := models.UserLogin(email, password, adminId)
 	if errorMessage.Message != "no error" {
-		t := views.StartPage()
+		file := views.FileNames()
+		t := views.ViewHomePages(file.UserHome)
 		t.Execute(w, errorMessage)
 	} else {
 		http.SetCookie(w, &http.Cookie{
 			Name:     "jwt",
-			Value:    str,
+			Value:    string,
 			Path:     "/",
 			HttpOnly: true,
 		})
-		http.Redirect(w, r, "/client/profilepage", http.StatusSeeOther)
+
+		http.Redirect(w, r, "/client/profilePage", http.StatusSeeOther)
 	}
 }

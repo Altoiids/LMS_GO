@@ -1,25 +1,23 @@
 package models
 
 import (
-	_ "github.com/go-sql-driver/mysql" 
 	"log"
 )
 
-func RequestIssue(username string , book_id int) (string){
-
+func RequestIssue(username string, bookId int) string {
 	db, err := Connection()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	var userID int
-	error := db.QueryRow("SELECT user_id FROM user WHERE name=?", username).Scan(&userID)
+
+	var userId int
+	error := db.QueryRow("SELECT userId FROM user WHERE name=?", username).Scan(&userId)
 	if error != nil {
 		return "error"
 	}
-	
 
-	rows, err := db.Query("SELECT * FROM request WHERE book_id=? AND user_id=? ", book_id, userID)
+	rows, err := db.Query("SELECT * FROM request WHERE bookId=? AND userId=? ", bookId, userId)
 	if err != nil {
 		return "error"
 	}
@@ -28,7 +26,7 @@ func RequestIssue(username string , book_id int) (string){
 	if rows.Next() {
 		return "request already made"
 	} else {
-		_, err = db.Exec("INSERT INTO request (book_id, user_id, status) VALUES (?, ?, ?)", book_id, userID,"issue requested")
+		_, err = db.Exec("INSERT INTO request (bookId, userId, status) VALUES (?, ?, ?)", bookId, userId, "issue requested")
 		if err != nil {
 			return "Database error"
 		}

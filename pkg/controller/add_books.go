@@ -2,23 +2,23 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"mvc/pkg/models"
 	"mvc/pkg/types"
 	"mvc/pkg/views"
 )
 
-func AddPage(writer http.ResponseWriter, request *http.Request) {
-	t := views.AddBook()
-	t.Execute(writer, nil)
+func AddPage(w http.ResponseWriter, r *http.Request) {
+	file := views.FileNames()
+	t := views.ViewAdminPages(file.AddBook)
+	t.Execute(w, nil)
 }
 
-func AddBook(writer http.ResponseWriter, request *http.Request) {
+func AddBook(w http.ResponseWriter, r *http.Request) {
 	var body types.Book
-	err := json.NewDecoder(request.Body).Decode(&body)
+	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
-		fmt.Println(err)
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 	}
 	
 	models.AddBook(body.BookName,body.Publisher,body.ISBN,body.Edition,body.Quantity)

@@ -4,11 +4,10 @@ import (
 	"net/http"
 	"mvc/pkg/models"
 	"strings"
-	"fmt"
 	"strconv"
 )
 
-func WithdrawRR(w http.ResponseWriter, r *http.Request) {
+func WithdrawReturnRequest(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("jwt")
 	if err != nil {
 		if err == http.ErrNoCookie {
@@ -24,22 +23,18 @@ func WithdrawRR(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
-	
 	username := claims.Username
+
 	r.ParseForm()
-	BookId := r.FormValue("bookId")
-	bookId, err := strconv.Atoi(BookId)
-
-
-	fmt.Println(username,bookId)
+	bookId, err := strconv.Atoi(r.FormValue("bookId"))
 	
-	error := models.WithdrawRR(username,bookId)
+	error := models.WithdrawReturnRequest(username,bookId)
 	if error != nil {
-		http.Error(w, "Database error", http.StatusInternalServerError)
-		fmt.Println(error)
+		http.Redirect(w, r, "/client/serverError", http.StatusFound)
 		return
 	}
-	http.Redirect(w, r, "/client/userreturn", http.StatusSeeOther)
+	
+	http.Redirect(w, r, "/client/userReturn", http.StatusSeeOther)
 
 }
 

@@ -31,7 +31,7 @@
 									<input
 										type="text"
 										name="title"
-										id="book_name"
+										id="bookName"
 										class="form-control"
 										required
 									/>
@@ -113,7 +113,7 @@
 				console.log(flag)
 
 				console.log("helloo")
-                const book_name = document.getElementById('book_name').value;
+                const bookName = document.getElementById('bookName').value;
                 const publisher = document.getElementById('publisher').value;
                 const isbn = document.getElementById('isbn').value;
                 const editions = document.getElementById('edition').value;
@@ -122,7 +122,7 @@
 				const quantity = parseInt(quantitys, 10);
               
                 const data = {
-                  book_name: book_name,
+                  bookName: bookName,
                   publisher:publisher,
                   isbn:isbn,
                   edition:edition,

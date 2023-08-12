@@ -1,13 +1,12 @@
 package models
 
 import (
-	_ "github.com/go-sql-driver/mysql"
 	"mvc/pkg/types"
 )
 
 func FetchBooks() ([]types.Book, error) {
 	db, err := Connection()
-	rows, err := db.Query("SELECT book_id, book_name, publisher, ISBN,edition,Quantity,issued_qty FROM books where Quantity >= 0 OR issued_qty >=0 ")
+	rows, err := db.Query("SELECT bookId, bookName, publisher, isbn,edition,quantity,issuedQuantity FROM books where Quantity >= 0 OR issuedQuantity >=0 ")
 	if err != nil {
 		return nil, err
 	}

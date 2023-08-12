@@ -1,51 +1,42 @@
 package models
 
 import (
-	"fmt"
 	"log"
-	"golang.org/x/crypto/bcrypt"
 	"mvc/pkg/types"
+	"golang.org/x/crypto/bcrypt"
 )
 
-func UserLogin(email, password string, admin_id int) (string, types.ErrorMessage) {
-	var errorMsg types.ErrorMessage
+func UserLogin(email, password string, adminId int) (string, types.ErrorMessage) {
+	var errorMessage types.ErrorMessage
 
 	db, err := Connection()
-	
 	if err != nil {
-		errorMsg.Message = "connection error"
+		errorMessage.Message = "connection error"
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-
-	var hashedPassword  string
-	err = db.QueryRow("SELECT hash FROM user WHERE email = ? and Admin_id =?", email,admin_id).Scan(&hashedPassword)
+	var hashedPassword string
+	err = db.QueryRow("SELECT hash FROM user WHERE email = ? and adminId =?", email, adminId).Scan(&hashedPassword)
 	if err != nil {
-		errorMsg.Message = "Invalid Credentials"
-		return " ", errorMsg
+		errorMessage.Message = "Invalid Credentials"
+		return " ", errorMessage
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
-	if err != nil {	
-		errorMsg.Message = "Invalid Credentials"
-		return " ", errorMsg
+	if err != nil {
+		errorMessage.Message = "Invalid Credentials"
+		return " ", errorMessage
 	}
-var Name string
 
-err = db.QueryRow("SELECT name FROM user WHERE email = ?", email).Scan(&Name)
-
+	var Name string
+	err = db.QueryRow("SELECT name FROM user WHERE email = ?", email).Scan(&Name)
 	jwtToken, err := GenerateToken(Name)
 	if err != nil {
-		fmt.Println(err)
-		errorMsg.Message = "token generation error"
-		return "", errorMsg
-		
+		errorMessage.Message = "Token generation error"
+		return "", errorMessage
 	}
-	
 
-	errorMsg.Message = "no error"
-	fmt.Println(errorMsg.Message)
-	return jwtToken, errorMsg
+	errorMessage.Message = "no error"
+	return jwtToken, errorMessage
 }
-

@@ -7,31 +7,35 @@ import (
 	"mvc/pkg/views"
 )
 
-func ListReturnRequest(writer http.ResponseWriter, request *http.Request) {
+func ListReturnRequest(w http.ResponseWriter, r *http.Request) {
 	booksList,err := models.FetchReturnBooks()
 	if err != nil {
-		http.Error(writer, "Database error", http.StatusInternalServerError)
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return
 	}
 
-	t := views.ReturnReqPage()
-	writer.WriteHeader(http.StatusOK)
-	t.Execute(writer, booksList)
+	file := views.FileNames()
+	t := views.ViewAdminPages(file.AcceptReturn)
+	w.WriteHeader(http.StatusOK)
+	t.Execute(w, booksList)
 }
 
 func AcceptReturn(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	requestId, err := strconv.Atoi(r.FormValue("requestId"))
 	if err != nil {
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return
 	}
 	bookId, err := strconv.Atoi(r.FormValue("bookId"))
 	if err != nil {
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return
 	}
 
 	error := models.AcceptReturn(requestId,bookId)
 	if error != "" {
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return 
 	}
 
@@ -43,11 +47,13 @@ func RejectReturn(w http.ResponseWriter, r *http.Request) {
 	RequestId := r.FormValue("requestId")
 	requestId, err := strconv.Atoi(RequestId)
 	if err != nil {
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return
 	}
 
 	error := models.RejectReturn(requestId)
 	if error != nil {
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return 
 	}
 	

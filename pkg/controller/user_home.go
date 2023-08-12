@@ -1,13 +1,12 @@
 package controller
 
 import (
-	"net/http"
-
 	"mvc/pkg/views"
+	"net/http"
 )
 
-func Welcome(writer http.ResponseWriter, request *http.Request) {
-	t := views.StartPage()
-	t.Execute(writer, nil)
+func UserLogin(w http.ResponseWriter, request *http.Request) {
+	file := views.FileNames()
+	t := views.ViewHomePages(file.UserHome)
+	t.Execute(w, nil)
 }
-

@@ -4,8 +4,7 @@ import (
 	"net/http"
 	"mvc/pkg/models"
 	"strings"
-	"strconv"
-	"fmt"		
+	"strconv"	
 )
 
 
@@ -25,13 +24,10 @@ func RequestReturn(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
-	
 	username := claims.Username
 
 	r.ParseForm()
-	BookId := r.FormValue("book_id")
-	bookId, err := strconv.Atoi(BookId)
-	fmt.Println(username,bookId)
+	bookId, err := strconv.Atoi(r.FormValue("bookId"))
 	models.RequestReturn(username,bookId)
-	http.Redirect(w, r, "/client/userreturn", http.StatusSeeOther)
+	http.Redirect(w, r, "/client/userReturn", http.StatusSeeOther)
 }

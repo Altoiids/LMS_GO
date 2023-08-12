@@ -489,7 +489,7 @@ main.sign-up-mode .carousel {
 
   
               <button onclick="showErrorMessage()" class = "sign-btn">User SignUp</button>
-              <a href="/adminhome" class="toggle">Login as admin</a>
+              <a href="/adminHome" class="toggle">Login as admin</a>
               
             </div>
           </form>
@@ -542,7 +542,7 @@ main.sign-up-mode .carousel {
 
             
 
-                <a href="/adminhome" class="toggle">Login as admin</a>
+                <a href="/adminHome" class="toggle">Login as admin</a>
               </div>
             </form>
 
@@ -622,11 +622,12 @@ function showErrorMessage() {
   if (errorMessage) {
       alert(errorMessage); 
       document.getElementById("error").value = '';
+     
   }
 }
-
-
 window.onload = showErrorMessage;
+
+
 
     </script>
   </body>

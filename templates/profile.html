@@ -31,8 +31,8 @@
                     <div class="table-responsive">
                         <table style="text-align:center; vertical-align:middle;" class="table table-bordered">
                             <tr>
-                                <th>Book_ID</th>
-                                <th>Book_name</th>
+                                <th>Book ID</th>
+                                <th>Book Name</th>
                                 <th>Publisher</th>
                                 <th>Action</th>
 
@@ -54,7 +54,7 @@
                                         <div>
 
                                             <form action="/client/requestReturn" method="POST">
-                                                <input type="hidden" name="book_id" value="{{ .BookID}}">
+                                                <input type="hidden" name="bookId" value="{{ .BookID}}">
                                                 
 
                                                 <button type="submit" class="btn btn-primary btn-sm" id="client/issueBook"> Request Return 

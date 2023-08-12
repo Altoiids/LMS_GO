@@ -1,39 +1,40 @@
 package controller
 
 import (
-	"net/http"
 	"mvc/pkg/models"
 	"mvc/pkg/views"
+	"net/http"
 	"strconv"
-	"fmt"
 )
 
-func ListIssueRequest(writer http.ResponseWriter, request *http.Request) {
-	booksList,err := models.FetchIssueBooks()
+func ListIssueRequest(w http.ResponseWriter, r *http.Request) {
+	booksList, err := models.FetchIssueBooks()
 	if err != nil {
-		http.Error(writer, "Database error", http.StatusInternalServerError)
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return
 	}
-
-	t := views.IssueRequestPage()
-	writer.WriteHeader(http.StatusOK)
-	t.Execute(writer, booksList)
+    file := views.FileNames()
+	t := views.ViewAdminPages(file.AcceptIssue)
+	w.WriteHeader(http.StatusOK)
+	t.Execute(w, booksList)
 }
 
 func AcceptIssue(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	requestId, err := strconv.Atoi(r.FormValue("requestId"))
 	if err != nil {
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return
 	}
 	bookId, err := strconv.Atoi(r.FormValue("bookId"))
 	if err != nil {
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return
 	}
 
-	error := models.AcceptIssue(requestId,bookId)
+	error := models.AcceptIssue(requestId, bookId)
 	if error != nil {
-	   fmt.Println(error)
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 	}
 
 	http.Redirect(w, r, "/admin/issueRequests", http.StatusSeeOther)
@@ -44,12 +45,14 @@ func RejectIssue(w http.ResponseWriter, r *http.Request) {
 	RequestId := r.FormValue("requestId")
 	requestId, err := strconv.Atoi(RequestId)
 	if err != nil {
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return
 	}
-	
+
 	error := models.RejectIssue(requestId)
 	if error != "" {
-		return 
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
+		return
 	}
 
 	http.Redirect(w, r, "/admin/issueRequests", http.StatusSeeOther)

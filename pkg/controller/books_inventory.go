@@ -1,25 +1,20 @@
 package controller
 
 import (
-	"net/http"
-"fmt"
 	"mvc/pkg/models"
 	"mvc/pkg/views"
+	"net/http"
 )
 
-func List(writer http.ResponseWriter, request *http.Request) {
-	
-	booksList,err := models.FetchBooks()
+func List(w http.ResponseWriter, r *http.Request) {
+	booksList, err := models.FetchBooks()
 	if err != nil {
-		http.Error(writer, "Database error", http.StatusInternalServerError)
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return
 	}
-	t := views.ListPage()
-	fmt.Println("check booksinv")
-	writer.WriteHeader(http.StatusOK)
-	t.Execute(writer, booksList)
-	
+
+	file := views.FileNames()
+	t := views.ViewAdminPages(file.BooksInventory)
+	w.WriteHeader(http.StatusOK)
+	t.Execute(w, booksList)
 }
-
-
-

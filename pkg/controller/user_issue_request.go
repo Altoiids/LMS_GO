@@ -5,10 +5,9 @@ import (
 	"mvc/pkg/models"
 	"mvc/pkg/views"
 	"strings"
-	"fmt"
 )
 
-func UserReturnRequest(w http.ResponseWriter, r *http.Request) {
+func UserIssueRequests(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("jwt")
 	if err != nil {
 		if err == http.ErrNoCookie {
@@ -24,18 +23,16 @@ func UserReturnRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
-	
 	username := claims.Username
 	
-	
-	booksList,err := models.UserReturnRequest(username)
+	issueList,err := models.UserIssueRequests(username)
 	if err != nil {
-		http.Error(w, "Database error", http.StatusInternalServerError)
-		fmt.Println(err)
+		http.Redirect(w, r, "/client/serverError", http.StatusFound)
 		return
 	}
-	t := views.UserReturnPage()
+	file := views.FileNames()
+	t := views.ViewClientPages(file.UserIssueRequests)
 	w.WriteHeader(http.StatusOK)
-	t.Execute(w, booksList)
+	t.Execute(w, issueList)
 }
 

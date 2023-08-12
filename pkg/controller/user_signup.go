@@ -1,41 +1,33 @@
 package controller
 
 import (
-	"fmt"
-	"net/http"
-	"mvc/pkg/models"
-	"mvc/pkg/types"
-	"mvc/pkg/views"
 	"golang.org/x/crypto/bcrypt"
+	"mvc/pkg/models"
+	"mvc/pkg/views"
+	"net/http"
 )
-
 
 func AddUserP(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	Name := r.FormValue("name")
-	Email := r.FormValue("email")
-	Password := r.FormValue("password")
+	name := r.FormValue("name")
+	email := r.FormValue("email")
+	password := r.FormValue("password")
 	confirmPassword := r.FormValue("confirmPassword")
 
-	const AdminID int = 0;
+	adminId := 0
 
-	fmt.Println(Email)
-	
-	password := []byte(Password)
-	hashpassword, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
+	passWord := []byte(password)
+	hashPassword, err := bcrypt.GenerateFromPassword(passWord, bcrypt.DefaultCost)
 	if err != nil {
-		panic(err)
-	} 
-	hash := string(hashpassword)
-	
-	var errorMessage types.ErrorMessage 
-	var str string
+		http.Redirect(w, r, "/client/serverError", http.StatusFound)
+	}
+	hash := string(hashPassword)
 
-	str, errorMessage = models.AddUser(AdminID,Name,Email,hash,Password,confirmPassword)
+	str, errorMessage := models.AddUser(adminId, name, email, hash, password, confirmPassword)
 
-	
 	if errorMessage.Message != "no error" {
-		t := views.StartPage()
+		file := views.FileNames()
+		t := views.ViewHomePages(file.UserHome)
 		t.Execute(w, errorMessage)
 	} else {
 		http.SetCookie(w, &http.Cookie{
@@ -44,6 +36,7 @@ func AddUserP(w http.ResponseWriter, r *http.Request) {
 			Path:     "/",
 			HttpOnly: true,
 		})
-		http.Redirect(w, r, "/client/profilepage", http.StatusSeeOther)
+
+		http.Redirect(w, r, "/client/profilePage", http.StatusSeeOther)
 	}
 }

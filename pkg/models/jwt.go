@@ -1,24 +1,22 @@
 package models
 
 import (
-	"fmt"
+	"errors"
+	"log"
+	"mvc/pkg/types"
 	"net/http"
+	"os"
 	"strings"
 	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"gopkg.in/yaml.v3"
-	"log"
-	"os"
-	"mvc/pkg/types"
-	"errors"
 )
-
 
 type Claims struct {
 	Username string `json:"username"`
 	jwt.StandardClaims
 }
-
 
 func GenerateToken(username string) (string, error) {
 	file, err := os.ReadFile("config.yaml")
@@ -32,25 +30,22 @@ func GenerateToken(username string) (string, error) {
 		log.Fatal(err)
 	}
 
-	jwtsecretkey := databaseInfo.JWT_Key
-			
+	jwtsecretkey := databaseInfo.JWT_KEY
+
 	jwtKey := []byte(jwtsecretkey)
-	
+
 	claims := &Claims{
 		Username: username,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 1).Unix(), 
+			ExpiresAt: time.Now().Add(time.Hour * 1).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	fmt.Println(token.SignedString(jwtKey))
 	return token.SignedString(jwtKey)
-	
+
 }
-
-
 
 func VerifyToken(tokenString string) (*Claims, error) {
 
@@ -65,8 +60,8 @@ func VerifyToken(tokenString string) (*Claims, error) {
 		log.Fatal(err)
 	}
 
-	jwtsecretkey := databaseInfo.JWT_Key
-			
+	jwtsecretkey := databaseInfo.JWT_KEY
+
 	jwtKey := []byte(jwtsecretkey)
 
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
@@ -81,20 +76,20 @@ func VerifyToken(tokenString string) (*Claims, error) {
 		return claims, nil
 	}
 
-	return nil, fmt.Errorf("Invalid token")
+	return nil, err
 }
 
 func VerifyTokenMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		pathComponents := strings.Split(r.URL.Path, "/")
 		firstPartOfURL := pathComponents[1]
-		if r.URL.Path == "/" || r.URL.Path == "/userlogout"|| r.URL.Path == "/adminlogout" || firstPartOfURL == "static" || r.URL.Path == "/adminhome" {
+		if r.URL.Path == "/" || r.URL.Path == "/userLogout" || r.URL.Path == "/adminLogout" || firstPartOfURL == "static" || r.URL.Path == "/adminHome" {
 			next.ServeHTTP(w, r)
 			return
 		}
 		cookie, err := r.Cookie("jwt")
 		if err != nil {
-			if r.URL.Path == "/" || r.URL.Path == "/userlogout"|| r.URL.Path == "/adminlogout" || r.URL.Path == "/adminhome" || r.URL.Path == "/signup" || r.URL.Path == "/login"|| firstPartOfURL == "static"  {
+			if r.URL.Path == "/" || r.URL.Path == "/userLogout" || r.URL.Path == "/adminLogout" || r.URL.Path == "/adminHome" || r.URL.Path == "/signUp" || r.URL.Path == "/login" || firstPartOfURL == "static" {
 				next.ServeHTTP(w, r)
 				return
 			} else {
@@ -106,56 +101,51 @@ func VerifyTokenMiddleware(next http.Handler) http.Handler {
 		tokenString := strings.TrimSpace(cookie.Value)
 		claims, err := VerifyToken(tokenString)
 		if err != nil {
-			fmt.Println(claims)
-			fmt.Println(err)
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		} else {
 			username := claims.Username
 			if firstPartOfURL == "admin" {
 				err := ValidateUserStatus(username, "admin")
 				if err == nil {
-					if r.URL.Path == "/signup" || r.URL.Path == "/login" || r.URL.Path == "/" || r.URL.Path == "/adminhome" || r.URL.Path == "/adminlogout" {
-						http.Redirect(w, r, "/client/profilepage", http.StatusSeeOther)
+					if firstPartOfURL == "admin" {
+						next.ServeHTTP(w, r)
 						return
+					} else {
+						http.Redirect(w, r, "/adminHome", http.StatusSeeOther)
 					}
-					next.ServeHTTP(w, r)
-				} else {
-					http.Redirect(w, r, "/client/profile", http.StatusSeeOther)
 				}
 			} else {
 				err := ValidateUserStatus(username, "client")
 				if err == nil {
-					if r.URL.Path == "/signup" || r.URL.Path == "/login" || r.URL.Path == "/" || r.URL.Path == "/adminhome" || r.URL.Path == "/adminlogout" {
-						http.Redirect(w, r, "/client/profilepage", http.StatusSeeOther)
-						return
-					}
-				
+					if firstPartOfURL == "client" {
 						next.ServeHTTP(w, r)
+						return
 					} else {
-						http.Redirect(w, r, "/admin/booksInventory", http.StatusSeeOther)
+						http.Redirect(w, r, "/", http.StatusSeeOther)
 					}
+				} else {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
 				}
 			}
+		}
 	})
 }
 
-
-
-func ValidateUserStatus(username, Usertype string) error {
+func ValidateUserStatus(username, userType string) error {
 	db, err := Connection()
 	if err != nil {
 		return err
 	}
-	var admin_id int
-	
-	if Usertype == "admin"{
-	admin_id = 1
-}
-if Usertype == "client"{
-	admin_id = 0
-}
+	var adminId int
+
+	if userType == "admin" {
+		adminId = 1
+	}
+	if userType == "client" {
+		adminId = 0
+	}
 	var CorrectUser bool
-	err = db.QueryRow(`SELECT EXISTS (SELECT 1 FROM user WHERE name=? and admin_id=?)`, username, admin_id).Scan(&CorrectUser)
+	err = db.QueryRow(`SELECT EXISTS (SELECT 1 FROM user WHERE name=? and adminId=?)`, username, adminId).Scan(&CorrectUser)
 	if err != nil {
 		return err
 	} else if CorrectUser == false {

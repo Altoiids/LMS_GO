@@ -6,7 +6,6 @@ import (
 )
 
 func LogoutUser(w http.ResponseWriter, r *http.Request) {
-
 	http.SetCookie(w, &http.Cookie{
 		Name:    "jwt",
 		Expires: time.Now(),
@@ -17,11 +16,10 @@ func LogoutUser(w http.ResponseWriter, r *http.Request) {
 
 
 func LogoutAdmin(w http.ResponseWriter, r *http.Request) {
-
 	http.SetCookie(w, &http.Cookie{
 		Name:    "jwt",
 		Expires: time.Now(),
 		
 	})
-	http.Redirect(w, r, "/adminhome", http.StatusSeeOther)
+	http.Redirect(w, r, "/adminHome", http.StatusSeeOther)
 }

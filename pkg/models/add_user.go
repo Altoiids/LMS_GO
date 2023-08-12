@@ -1,58 +1,48 @@
 package models
 
 import (
-	_ "github.com/go-sql-driver/mysql" 
 	"log"
-
 	"mvc/pkg/types"
-	
-	
 )
 
-func AddUser(admin_id int, name, email, hash, password, confirmPassword string ) (string, types.ErrorMessage) {
-	var errorMsg types.ErrorMessage
-
+func AddUser(adminId int, name, email, hash, password, confirmPassword string) (string, types.ErrorMessage) {
+	var errorMessage types.ErrorMessage
 
 	db, err := Connection()
 	if err != nil {
-		errorMsg.Message = "connection error"
+		errorMessage.Message = "connection error"
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	if password != confirmPassword{
-		errorMsg.Message = "Passwords didn't match"
-		return "", errorMsg
+	if password != confirmPassword {
+		errorMessage.Message = "Passwords didn't match"
+		return "", errorMessage
 	}
-    
-	
 
 	rows, err := db.Query("SELECT * FROM user WHERE name=? OR email=?", name, email)
 	if err != nil {
-		errorMsg.Message = "error"
-		return "", errorMsg // Return the error directly instead of a string
+		errorMessage.Message = "error"
+		return "", errorMessage
 	}
 	defer rows.Close()
 
 	if rows.Next() {
-		
-		errorMsg.Message = "user exists"
-		return "", errorMsg
+		errorMessage.Message = "user exists"
+		return "", errorMessage
 	} else {
-		_, err = db.Exec("INSERT INTO user (admin_id, name, email, hash) VALUES (?, ?, ?, ?)", admin_id, name, email, hash)
+		_, err = db.Exec("INSERT INTO user (adminId, name, email, hash) VALUES (?, ?, ?, ?)", adminId, name, email, hash)
 		if err != nil {
-			errorMsg.Message = "error"
-			return "", errorMsg // Return the error directly instead of a string
+			errorMessage.Message = "error"
+			return "", errorMessage
 		}
 	}
 
-	
-
 	jwt, err := GenerateToken(name)
 	if err != nil {
-		errorMsg.Message = "token generation error"
-		return "", errorMsg// Return the error directly instead of a string
+		errorMessage.Message = "token generation error"
+		return "", errorMessage
 	}
-	errorMsg.Message = "no error"
-	return jwt, errorMsg // Return the JWT and nil error if everything is successful
+	errorMessage.Message = "no error"
+	return jwt, errorMessage
 }

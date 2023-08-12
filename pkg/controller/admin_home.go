@@ -1,11 +1,12 @@
 package controller
 
 import (
-	"net/http"
 	"mvc/pkg/views"
+	"net/http"
 )
 
-func AdminHome(writer http.ResponseWriter, request *http.Request) {
-	t := views.StartAdminPage()
-	t.Execute(writer, nil)
+func AdminHome(w http.ResponseWriter, r *http.Request) {
+	file := views.FileNames()
+	t := views.ViewHomePages(file.AdminHome)
+	t.Execute(w, nil)
 }

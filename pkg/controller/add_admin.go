@@ -1,16 +1,17 @@
 package controller
 
 import (
-	"fmt"
-	"net/http"
 	"mvc/pkg/models"
-	"golang.org/x/crypto/bcrypt"
 	"mvc/pkg/views"
+	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
-func AddAdminPage(writer http.ResponseWriter, request *http.Request) {
-	t := views.AddAdmin()
-	t.Execute(writer, nil)
+func AddAdminPage(w http.ResponseWriter, request *http.Request) {
+	file := views.FileNames()
+	t := views.ViewAdminPages(file.AddAdmin)
+	t.Execute(w, nil)
 }
 
 func AddAdmin(w http.ResponseWriter, r *http.Request) {
@@ -20,22 +21,21 @@ func AddAdmin(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 	confirmPassword := r.FormValue("confirmPassword")
 
-	const adminId int = 1;
+	const adminId int = 1
 
-    passWord := []byte(password)
+	passWord := []byte(password)
 	hashpassword, err := bcrypt.GenerateFromPassword(passWord, bcrypt.DefaultCost)
 	if err != nil {
-		panic(err)
-	} 
+		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
+	}
 	hash := string(hashpassword)
 
-	returnString, errorMessage := models.AddUser(adminId,name,email,hash,password,confirmPassword)
+	_, errorMessage := models.AddUser(adminId, name, email, hash, password, confirmPassword)
 	if errorMessage.Message != "no error" {
-		fmt.Println(returnString)
-		t := views.AddAdmin()
+		file := views.FileNames()
+		t := views.ViewAdminPages(file.AddAdmin)
 		t.Execute(w, errorMessage)
 	} else {
 		http.Redirect(w, r, "/admin/viewAdmins", http.StatusSeeOther)
 	}
 }
-	

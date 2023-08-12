@@ -97,9 +97,15 @@
                         />
                         </div>
                         <div class="col-3">
-                        <button type="submit" class="btn btn-primary btn-sm">
-                          Delete
-                        </button>
+                          {{if eq .Quantity 0}}
+                          <button onclick = showQuantityErrorMessage() type="submit"  class="btn btn-primary btn-sm ">
+                            Delete
+                          </button>
+                          {{ else }}
+                          <button type="submit"  class="btn btn-primary btn-sm">
+                            Delete
+                          </button>
+                          {{ end}}
                     </div>
                 </div>
                       </form>
@@ -138,11 +144,16 @@
 
     <script>
     function showErrorMessage() {
-
  
       alert("Book is issued. Can't remove from database."); // You can replace this with your custom popup implementation
       
       window.onload = showErrorMessage;
+}
+function showQuantityErrorMessage() {
+ 
+  alert("No book is present. Can't delete"); // You can replace this with your custom popup implementation
+  
+  window.onload = showErrorMessage;
 }
 
   </script>

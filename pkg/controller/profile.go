@@ -5,7 +5,6 @@ import (
 	"mvc/pkg/models"
 	"mvc/pkg/views"
 	"strings"
-	"fmt"
 )
 
 func ProfilePage(w http.ResponseWriter, r *http.Request) {
@@ -24,17 +23,15 @@ func ProfilePage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
-	
 	username := claims.Username
-	
 	
 	booksList,err := models.ProfileBooks(username)
 	if err != nil {
-		http.Error(w, "Database error", http.StatusInternalServerError)
-		fmt.Println(err)
+		http.Redirect(w, r, "/client/serverError", http.StatusFound)
 		return
 	}
-	t := views.ProfilePage()
+	file := views.FileNames()
+	t := views.ViewClientPages(file.Profile)
 	w.WriteHeader(http.StatusOK)
 	t.Execute(w, booksList)
 }

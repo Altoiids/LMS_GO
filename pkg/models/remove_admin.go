@@ -1,14 +1,11 @@
 package models
 
 import (
-	_ "github.com/go-sql-driver/mysql"
 	"log"
-	
 )
 
 
 func RemoveAdmin( email string) (string){
-
 	db, err := Connection()
 	if err != nil {
 		log.Fatal(err)
@@ -20,7 +17,6 @@ func RemoveAdmin( email string) (string){
 		return "There was error"
 	}
 	defer rows.Close()
-
-
+	
 	return ""
 }
