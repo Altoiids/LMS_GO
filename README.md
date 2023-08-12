@@ -8,12 +8,12 @@ This is the repo for Library Management System written in go following MVC archi
 3. User friendly and attractive interface.
 
 ## Application Flow
-###Admin-Side
+### Admin-Side
 1. Admin can view the books inventory and add, delete or remove the books.
 2. He can see the issue and return requests and can accept or reject them.
 3. He can add and remove admin.
 
-###User-Side
+### User-Side
 1. User can view the books available in library and also the books issued against their account.
 2. He can accept/withdraw issue of books.
 3. He can accept/withdraw return of books.
