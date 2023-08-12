@@ -2,15 +2,17 @@ package api
 
 import (
 	"mvc/pkg/controller"
-	"mvc/pkg/models"
+	"mvc/pkg/jwt_middleware_handler"
+	"mvc/pkg/utils"
 	"net/http"
+
 	"github.com/gorilla/mux"
 )
 
 func Start() {
 
 	r := mux.NewRouter()
-	r.Use(models.VerifyTokenMiddleware)
+	r.Use(jwt_middleware_handler.VerifyTokenMiddleware)
 
 	r.HandleFunc("/", controller.UserLogin).Methods("GET")
 	r.HandleFunc("/client/profilePage", controller.ProfilePage).Methods("GET")
@@ -25,9 +27,7 @@ func Start() {
 	r.HandleFunc("/client/withdrawReturnRequest", controller.WithdrawReturnRequest).Methods("POST")
 	r.HandleFunc("/client/requestReturn", controller.RequestReturn).Methods("POST")
 	r.HandleFunc("/userLogout", controller.LogoutUser).Methods("POST")
-	
 
-	
 	r.HandleFunc("/adminHome", controller.AdminHome).Methods("GET")
 	r.HandleFunc("/admin/addBook", controller.AddPage).Methods("GET")
 	r.HandleFunc("/admin/booksInventory", controller.List).Methods("GET")
@@ -48,7 +48,12 @@ func Start() {
 	r.HandleFunc("/admin/rejectReturnRequest", controller.RejectReturn).Methods("POST")
 	r.HandleFunc("/admin/removeAdmin", controller.RemoveAdmin).Methods("POST")
 	r.HandleFunc("/adminLogout", controller.LogoutAdmin).Methods("POST")
-	
+
+	pathCSS, err := utils.GetCurrentDirPath()
+	if err == nil {
+		s := http.StripPrefix("/static/", http.FileServer(http.Dir(pathCSS+"/templates/static/")))
+		r.PathPrefix("/static/").Handler(s)
+	}
 
 	http.ListenAndServe(":8000", r)
 }
