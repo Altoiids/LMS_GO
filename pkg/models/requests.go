@@ -1,53 +1,49 @@
 package models
 
-import (
-	"log"
-)
-
-func IncreaseQuantity(bookId, quantity int) string {
+func IncreaseQuantity(bookId, quantity int) error {
 	db, err := Connection()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer db.Close()
 
 	rows, err := db.Query("UPDATE books SET quantity = quantity + ? WHERE bookId = ?", quantity, bookId)
 	if err != nil {
-		return "There was error"
+		return err
 	}
 	defer rows.Close()
 
-	return ""
+	return nil
 }
 
-func DecreaseQuantity(bookId, quantity int) string {
+func DecreaseQuantity(bookId, quantity int) error {
 	db, err := Connection()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer db.Close()
 
 	rows, err := db.Query("UPDATE books SET quantity = quantity - ? WHERE bookId = ?", quantity, bookId)
 	if err != nil {
-		return "There was error"
+		return err
 	}
 	defer rows.Close()
 
-	return ""
+	return nil
 }
 
-func RemoveBook(bookId int) string {
+func RemoveBook(bookId int) error {
 	db, err := Connection()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer db.Close()
 
 	rows, err := db.Query("DELETE FROM books WHERE bookId = ? AND issuedQuantity = 0", bookId)
 	if err != nil {
-		return "There was error"
+		return err
 	}
 	defer rows.Close()
 
-	return ""
+	return nil
 }

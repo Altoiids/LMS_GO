@@ -1,7 +1,6 @@
 package models
 
 import (
-	"log"
 	"mvc/pkg/types"
 )
 
@@ -57,18 +56,18 @@ func AcceptIssue(requestId, bookId int) error {
 	return error
 }
 
-func RejectIssue(requestId int) string {
+func RejectIssue(requestId int) error {
 	db, err := Connection()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer db.Close()
 
 	rows, err := db.Query(`DELETE FROM request WHERE requestId = ?`, requestId)
 	if err != nil {
-		return "There was error"
+		return err
 	}
 	defer rows.Close()
 
-	return ""
+	return nil
 }

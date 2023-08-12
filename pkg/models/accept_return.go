@@ -1,7 +1,6 @@
 package models
 
 import (
-	"log"
 	"mvc/pkg/types"
 )
 
@@ -26,27 +25,27 @@ func FetchReturnBooks() ([]types.Book, error) {
 	return books, nil
 }
 
-func AcceptReturn(requestId, bookId int) string {
+func AcceptReturn(requestId, bookId int) error {
 	db, err := Connection()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer db.Close()
 
 	rows, err := db.Exec(`DELETE FROM request WHERE requestId = ?`, requestId)
 	if err != nil {
-		return "There was error"
+		return err
 	}
 
 	rowsAffected, err := rows.RowsAffected()
 	if rowsAffected > 0 {
 		_, err := db.Exec(`UPDATE books SET quantity=quantity + 1, issuedQuantity = issuedQuantity -1 WHERE bookId=?`, bookId)
 		if err != nil {
-			return "There was error"
+			return err
 		}
 	}
 
-	return ""
+	return nil
 }
 
 func RejectReturn(requestId int) error {

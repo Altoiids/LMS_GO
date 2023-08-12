@@ -1,22 +1,17 @@
 package models
 
-import (
-	"log"
-)
-
-
-func RemoveAdmin( email string) (string){
+func RemoveAdmin( email string) (error){
 	db, err := Connection()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer db.Close()
 
 	rows, err := db.Query("DELETE from user WHERE email = ?", email)
 	if err != nil {
-		return "There was error"
+		return err
 	}
 	defer rows.Close()
 	
-	return ""
+	return nil
 }

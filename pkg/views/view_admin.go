@@ -5,6 +5,6 @@ import (
 )
 
 func ViewAdminPages(fileName string) *template.Template {
-	temp := template.Must(template.ParseFiles("templates/" + fileName, "templates/partials/admin_navbar.html"))
+	temp := template.Must(template.ParseFiles("templates/" + fileName, "templates/common_components/admin_navbar.html"))
 	return temp
 }

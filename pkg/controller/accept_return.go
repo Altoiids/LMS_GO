@@ -34,7 +34,7 @@ func AcceptReturn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	error := models.AcceptReturn(requestId,bookId)
-	if error != "" {
+	if error != nil {
 		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 		return 
 	}

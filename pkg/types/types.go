@@ -12,11 +12,10 @@ type Book struct {
 	Quantity       int    `json:"quantity"`
 	IssuedQuantity int    `json:"issuedQuantity"`
 }
-type UserReg struct {
-	Name            string `json:"name"`
-	Email           string `json:"email"`
-	Password        string `json:"password"`
-	PasswordConfirm string `json:"passwordConfirm"`
+type UserRegistration struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 type ErrorMessage struct {
 	Message string `json:"message"`
