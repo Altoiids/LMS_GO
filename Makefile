@@ -1,12 +1,15 @@
 EXEC_FILE := mvc
 
-.PHONY: all replacecredentials&setupMySQL build test run 
+.PHONY: all configFileBuild&setupMySQL setup build test run 
 
-all: replacecredentials&setupMySQL build test run open
+all: configFileBuild&setupMySQL setup build test run 
 
-replacecredentials&setupMySQL:
-	chmod +x ./scripts/replaceCredentials.sh
-	./scripts/replaceCredentials.sh
+configFileBuild&setupMySQL:
+	chmod +x ./scripts/configFileBuild.sh
+	./scripts/configFileBuild.sh
+
+setup:
+	python3 ./scripts/setup.py
 
 build:
 	go mod vendor
@@ -17,4 +20,5 @@ test:
 	go test ./pkg/models
 
 run:
-	./${EXEC_FILE}
+	./$(EXEC_FILE)
+

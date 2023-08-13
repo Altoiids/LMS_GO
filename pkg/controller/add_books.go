@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"mvc/pkg/helper"
 	"mvc/pkg/models"
 	"mvc/pkg/types"
 	"mvc/pkg/views"
@@ -17,8 +18,8 @@ func AddPage(w http.ResponseWriter, r *http.Request) {
 func AddBook(w http.ResponseWriter, r *http.Request) {
 	var errorMessage types.ErrorMessage
 
-	err2 := r.ParseForm()
-	if err2 != nil {
+	error := r.ParseForm()
+	if error != nil {
 		http.Error(w, "Error parsing form", http.StatusBadRequest)
 		return
 	}
@@ -35,7 +36,7 @@ func AddBook(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/admin/serverError", http.StatusFound)
 	}
 
-	if ValidISBN(isbn) {
+	if helper.ValidISBN(isbn) {
 		error := models.AddBook(bookName, publisher, isbn, edition, quantity)
 		if error != nil {
 			http.Redirect(w, r, "/admin/serverError", http.StatusFound)

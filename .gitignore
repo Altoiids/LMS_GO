@@ -1,4 +1,4 @@
 config.yaml
 vendor
 mvc
-./cmd/cmd
+./mvc/cmd/cmd

@@ -19,18 +19,22 @@ This is the repo for Library Management System written in go following MVC archi
 3. He can accept/withdraw return of books.
 
 ## Manual Setup
-Run the following commands on your terminal
+
+### Clone the Repo
 ```
 git clone https://github.com/Altoiids/LMS_GO.git
 cd LMS_GO
+```
+### Make the config.yaml file
+### Setup MySQL:
+ `migrate -path database/migration/ -database "mysql://your_db_username:your_db_password@tcp(localhost:3306)/DB_NAME" force version`
+
+ ### Making the first admin
+python3 ./scripts/setup.py
+
+### Building Project
 go mod vendor
 go mod tidy
-```
-### MySQL:
-Run below commands after entering your respective credentials
-1. Run this command : `migrate -path database/migration/ -database "mysql://your_db_username:your_db_password@tcp(localhost:3306)/DB_NAME" -verbose up`
-2. If this command gives error run command : `migrate -path database/migration/ -database "mysql://your_db_username:your_db_password@tcp(localhost:3306)/DB_NAME" force version`
-
 
 ### Run the test function:
 1. run command `go test ./pkg/models` .

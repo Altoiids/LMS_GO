@@ -8,11 +8,11 @@ import (
 
 func LoginAdmin(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	Email := r.FormValue("loginEmail")
-	Password := r.FormValue("loginPassword")
-	AdminId := 1
+	email := r.FormValue("loginEmail")
+	password := r.FormValue("loginPassword")
+	adminId := 1
 
-	string, errorMessage := models.UserLogin(Email, Password, AdminId)
+	string, errorMessage := models.UserLogin(email, password, adminId)
 
 	if errorMessage.Message != "no error" {
 		file := views.FileNames()
